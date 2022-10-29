@@ -25,7 +25,7 @@ pipeline{
         stage("docker build & docker push"){
             steps{
                 script{
-                    withCredentials([string(credentialsId: 'docker_pass', variable: 'docker_password')]) {
+                    withCredentials([string(credentialsId: 'docker_pass_nexus', variable: 'docker_password')]) {
                              sh '''
                                 docker build -t 20.102.101.194:8083/springapp:${VERSION} .
                                 docker login -u admin -p $docker_password 20.102.101.194:8083 
@@ -51,7 +51,7 @@ pipeline{
         stage("pushing the helm charts to nexus"){
             steps{
                 script{
-                    withCredentials([string(credentialsId: 'docker_pass', variable: 'docker_password')]) {
+                    withCredentials([string(credentialsId: 'docker_pass_nexus', variable: 'docker_password')]) {
                           dir('kubernetes/') {
                              sh '''
                                  helmversion=$( helm show chart myapp | grep version | cut -d: -f 2 | tr -d ' ')
